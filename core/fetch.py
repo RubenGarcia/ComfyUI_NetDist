@@ -4,6 +4,7 @@ import torch
 import requests
 import numpy as np
 from PIL import Image
+from .utils import get_auth_headers
 
 POLLING = 0.5
 
@@ -17,9 +18,7 @@ def get_job_output(inputs, outputs):
 
 def wait_for_job(remote_url, remote_bearer_token, job_id):
 	fail = 0
-        headers = {}
-        if remote_bearer_token and remote_bearer_token.strip():
-             headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+        headers = get_auth_headers(remote_bearer_token)
 	while fail <= 3:
 		r = requests.get(f"{remote_url}/history", headers=headers, timeout=4)
 		try:
@@ -55,9 +54,7 @@ def fetch_from_remote(remote_url, remote_bearer_token, job_id):
 
 	images = []
 
-        headers = {}
-        if remote_bearer_token and remote_bearer_token.strip():
-            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+        headers = get_auth_headers(remote_bearer_token)
 
 	for i in wait_for_job(remote_url, remote_bearer_token, job_id):
 		img_url = f"{remote_url}/view?filename={i['filename']}&subfolder={i['subfolder']}&type={i['type']}"

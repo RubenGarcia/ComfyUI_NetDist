@@ -11,9 +11,7 @@ from copy import deepcopy
 from .utils import clean_url, get_client_id
 
 def clear_remote_queue(remote_url, remote_bearer_token):
-        headers = {}
-        if remote_bearer_token and remote_bearer_token.strip():
-            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+        headers = get_auth_headers(remote_bearer_token)
 	r = requests.get(f"{remote_url}/queue", headers=headers, timeout=4)
 	r.raise_for_status()
 	queue = r.json()
@@ -43,10 +41,7 @@ def clear_remote_queue(remote_url, remote_bearer_token):
 			break
 
 def get_remote_os(remote_url, remote_bearer_token):
-        headers = {}
-        if remote_bearer_token and remote_bearer_token.strip():
-            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
-
+        headers = get_auth_headers(remote_bearer_token)
 	url = f"{remote_url}/system_stats"
 	r = requests.get(url, headers=headers, timeout=4)
 	r.raise_for_status()
@@ -57,17 +52,14 @@ def get_output_nodes(remote_url, remote_bearer_token):
 	# I'm 90% sure this could just use the
 	# list from the host but better safe than sorry
 	url = f"{remote_url}/object_info"
-        headers = {}
-        if remote_bearer_token and remote_bearer_token.strip():
-            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
-
+        headers = get_auth_headers(remote_bearer_token)
 	r = requests.get(url, headers=headers, timeout=4)
 	r.raise_for_status()
 	data = r.json()
 	out = [k for k, v in data.items() if v.get("output_node")]
 	return out
 
-def dispatch_to_remote(remote_url, prompt, job_id=f"{get_client_id()}-unknown", outputs="final_image"):
+def dispatch_to_remote(remote_url, remote_bearer_token, prompt, job_id=f"{get_client_id()}-unknown", outputs="final_image"):
 	### PROMPT LOGIC ###
 	prompt = deepcopy(prompt)
 	to_del = []
@@ -143,10 +135,11 @@ def dispatch_to_remote(remote_url, prompt, job_id=f"{get_client_id()}-unknown", 
 			"job_id": job_id,
 		}
 	}
+        headers = get_auth_headers(remote_bearer_token)
 	ar = requests.post(
 		f"{remote_url}/prompt",
 		data    = json.dumps(data),
-		headers = {"Content-Type": "application/json"},
+		headers = {"Content-Type": "application/json", **headers},
 		timeout = 4,
 	)
 	ar.raise_for_status()

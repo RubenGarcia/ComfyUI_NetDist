@@ -21,3 +21,9 @@ def clean_url(raw, multi=False):
 	raw = raw.replace(' ', ',').replace('\n', ',').replace('\t', ',')
 	urls = [x.rstrip('/') for x in raw.split(',') if x.strip()]
 	return urls if multi else urls[0]
+
+def get_auth_headers(remote_bearer_token):
+    headers = {}
+    if remote_bearer_token and remote_bearer_token.strip():
+        headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+    return headers
