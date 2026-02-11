@@ -18,7 +18,7 @@ def get_job_output(inputs, outputs):
 
 def wait_for_job(remote_url, remote_bearer_token, job_id):
 	fail = 0
-        headers = get_auth_headers(remote_bearer_token)
+	headers = get_auth_headers(remote_bearer_token)
 	while fail <= 3:
 		r = requests.get(f"{remote_url}/history", headers=headers, timeout=4)
 		try:
@@ -54,7 +54,7 @@ def fetch_from_remote(remote_url, remote_bearer_token, job_id):
 
 	images = []
 
-        headers = get_auth_headers(remote_bearer_token)
+	headers = get_auth_headers(remote_bearer_token)
 
 	for i in wait_for_job(remote_url, remote_bearer_token, job_id):
 		img_url = f"{remote_url}/view?filename={i['filename']}&subfolder={i['subfolder']}&type={i['type']}"

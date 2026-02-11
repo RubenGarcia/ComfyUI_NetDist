@@ -12,7 +12,7 @@ from .utils import clean_url, get_client_id
 
 def clear_remote_queue(remote_url, remote_bearer_token):
         headers = get_auth_headers(remote_bearer_token)
-	r = requests.get(f"{remote_url}/queue", headers=headers, timeout=4)
+        r = requests.get(f"{remote_url}/queue", headers=headers, timeout=4)
 	r.raise_for_status()
 	queue = r.json()
 
@@ -24,7 +24,7 @@ def clear_remote_queue(remote_url, remote_bearer_token):
 	r = requests.post(
 		f"{remote_url}/queue",
 		json    = {"delete" : to_cancel},
-                headers=headers,
+		headers=headers,
 		timeout = 4,
 	)
 	r.raise_for_status()
@@ -34,14 +34,14 @@ def clear_remote_queue(remote_url, remote_bearer_token):
 			r = requests.post(
 				f"{remote_url}/interrupt",
 				json    = {},
-                                headers=headers,
+				headers=headers,
 				timeout = 4,
 			)
 			r.raise_for_status()
 			break
 
 def get_remote_os(remote_url, remote_bearer_token):
-        headers = get_auth_headers(remote_bearer_token)
+	headers = get_auth_headers(remote_bearer_token)
 	url = f"{remote_url}/system_stats"
 	r = requests.get(url, headers=headers, timeout=4)
 	r.raise_for_status()
@@ -52,7 +52,7 @@ def get_output_nodes(remote_url, remote_bearer_token):
 	# I'm 90% sure this could just use the
 	# list from the host but better safe than sorry
 	url = f"{remote_url}/object_info"
-        headers = get_auth_headers(remote_bearer_token)
+	headers = get_auth_headers(remote_bearer_token)
 	r = requests.get(url, headers=headers, timeout=4)
 	r.raise_for_status()
 	data = r.json()
@@ -135,7 +135,7 @@ def dispatch_to_remote(remote_url, remote_bearer_token, prompt, job_id=f"{get_cl
 			"job_id": job_id,
 		}
 	}
-        headers = get_auth_headers(remote_bearer_token)
+	headers = get_auth_headers(remote_bearer_token)
 	ar = requests.post(
 		f"{remote_url}/prompt",
 		data    = json.dumps(data),
