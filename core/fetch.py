@@ -53,9 +53,7 @@ def fetch_from_remote(remote_url, remote_bearer_token, job_id):
 		return None
 
 	images = []
-
 	headers = get_auth_headers(remote_bearer_token)
-
 	for i in wait_for_job(remote_url, remote_bearer_token, job_id):
 		img_url = f"{remote_url}/view?filename={i['filename']}&subfolder={i['subfolder']}&type={i['type']}"
 
