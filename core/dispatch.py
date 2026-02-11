@@ -11,8 +11,8 @@ from copy import deepcopy
 from .utils import clean_url, get_client_id
 
 def clear_remote_queue(remote_url, remote_bearer_token):
-        headers = get_auth_headers(remote_bearer_token)
-        r = requests.get(f"{remote_url}/queue", headers=headers, timeout=4)
+	headers = get_auth_headers(remote_bearer_token)
+	r = requests.get(f"{remote_url}/queue", headers=headers, timeout=4)
 	r.raise_for_status()
 	queue = r.json()
 

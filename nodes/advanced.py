@@ -73,10 +73,10 @@ class RemoteQueueWorker:
 					"multiline": False,
 					"default": "http://127.0.0.1:8288/",
 				}),
-                                "remote_bearer_token": ("STRING", {
-                                        "multiline": False,
-                                        "default": "",
-                                        "tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
+				"remote_bearer_token": ("STRING", {
+					"multiline": False,
+					"default": "",
+					"tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
 				"batch_override": ("INT", {"default": 0, "min": 0, "max": 8}),
 				"enabled": (["true", "false", "remote"],{"default": "true"}),
 				"outputs": (["final_image", "any"],{"default":"final_image"}),
@@ -105,14 +105,14 @@ class RemoteQueueWorker:
 		clear_remote_queue(remote_url, remote_bearer_token)
 		dispatch_to_remote(
 			remote_url,
-                        remote_bearer_token,
+			remote_bearer_token,
 			remote_chain["prompt"],
 			remote_chain["job_id"],
 			outputs,
 		)
 		remote_info = {
 			"remote_url" : remote_url,
-                        "remote_bearer_token": remote_bearer_token,
+			"remote_bearer_token": remote_bearer_token,
 			"job_id"     : remote_chain["job_id"],
 		}
 		return (remote_chain, remote_info)

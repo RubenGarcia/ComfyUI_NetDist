@@ -28,7 +28,7 @@ class FetchRemote():
 	def fetch(self, final_image, remote_info):
 		out = fetch_from_remote(
 			remote_url = remote_info.get("remote_url"),
-                        remote_bearer_token = remote_info.get("remote_bearer_token"),
+			remote_bearer_token = remote_info.get("remote_bearer_token"),
 			job_id     = remote_info.get("job_id"),
 		)
 		if out is None:
@@ -50,10 +50,10 @@ class RemoteQueueSimple():
 					"multiline": False,
 					"default": "http://127.0.0.1:8288/",
 				}),
-                                "remote_bearer_token": ("STRING", {
-                                        "multiline": False,
-                                        "default": "",
-                                        "tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
+				"remote_bearer_token": ("STRING", {
+					"multiline": False,
+					"default": "",
+					"tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
 				"batch_local": ("INT", {"default": 1, "min": 1, "max": 8}),
 				"batch_remote": ("INT", {"default": 1, "min": 1, "max": 8}),
 				"trigger": (["on_change", "always"],),
@@ -84,7 +84,7 @@ class RemoteQueueSimple():
 
 		remote_info = {
 			"remote_url" : remote_url,
-                        "remote_bearer_token": remote_bearer_token,
+			"remote_bearer_token": remote_bearer_token,
 			"job_id"     : job_id,
 		}
 		return (seed, batch_local, remote_info)
