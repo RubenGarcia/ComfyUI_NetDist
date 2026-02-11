@@ -73,6 +73,10 @@ class RemoteQueueWorker:
 					"multiline": False,
 					"default": "http://127.0.0.1:8288/",
 				}),
+                                "remote_bearer_token": ("STRING", {
+                                        "multiline": False,
+                                        "default": "",
+                                        "tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
 				"batch_override": ("INT", {"default": 0, "min": 0, "max": 8}),
 				"enabled": (["true", "false", "remote"],{"default": "true"}),
 				"outputs": (["final_image", "any"],{"default":"final_image"}),
@@ -85,7 +89,7 @@ class RemoteQueueWorker:
 	CATEGORY = "remote/advanced"
 	TITLE = "Queue on remote (worker)"
 
-	def queue(self, remote_chain, remote_url, batch_override, enabled, outputs):
+	def queue(self, remote_chain, remote_url, remote_bearer_token, batch_override, enabled, outputs):
 		current_offset = remote_chain["seed_offset"]
 		remote_chain["seed_offset"] += 1 if batch_override == 0 else batch_override
 		if enabled == "false":

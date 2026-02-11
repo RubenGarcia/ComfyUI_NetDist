@@ -28,6 +28,7 @@ class FetchRemote():
 	def fetch(self, final_image, remote_info):
 		out = fetch_from_remote(
 			remote_url = remote_info.get("remote_url"),
+                        remote_bearer_token = remote_info.get("remote_bearer_token"),
 			job_id     = remote_info.get("job_id"),
 		)
 		if out is None:
@@ -49,6 +50,10 @@ class RemoteQueueSimple():
 					"multiline": False,
 					"default": "http://127.0.0.1:8288/",
 				}),
+                                "remote_bearer_token": ("STRING", {
+                                        "multiline": False,
+                                        "default": "",
+                                        "tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
 				"batch_local": ("INT", {"default": 1, "min": 1, "max": 8}),
 				"batch_remote": ("INT", {"default": 1, "min": 1, "max": 8}),
 				"trigger": (["on_change", "always"],),
@@ -66,7 +71,7 @@ class RemoteQueueSimple():
 	CATEGORY = "remote"
 	TITLE = "Queue on remote (single)"
 
-	def queue(self, remote_url, batch_local, batch_remote, trigger, enabled, seed, prompt):
+	def queue(self, remote_url, remote_bearer_token, batch_local, batch_remote, trigger, enabled, seed, prompt):
 		if enabled == "false":
 			return (seed, batch_local, {})
 		if enabled == "remote":
@@ -74,18 +79,19 @@ class RemoteQueueSimple():
 
 		job_id = get_new_job_id()
 		remote_url = clean_url(remote_url)
-		clear_remote_queue(remote_url)
-		dispatch_to_remote(remote_url, prompt, job_id)
+		clear_remote_queue(remote_url, remote_bearer_token)
+		dispatch_to_remote(remote_url, remote_bearer_token, prompt, job_id)
 
 		remote_info = {
 			"remote_url" : remote_url,
+                        "remote_bearer_token": remote_bearer_token,
 			"job_id"     : job_id,
 		}
 		return (seed, batch_local, remote_info)
 
 	@classmethod
-	def IS_CHANGED(self, remote_url, batch_local, batch_remote, trigger, enabled, seed, prompt):
-		uuid = f"W:{remote_url},B1:{batch_local},B2:{batch_remote},S:{seed},E:{enabled}"
+	def IS_CHANGED(self, remote_url, remote_bearer_token, batch_local, batch_remote, trigger, enabled, seed, prompt):
+		uuid = f"W:{remote_url},TOKEN:{remote_bearer_token},B1:{batch_local},B2:{batch_remote},S:{seed},E:{enabled}"
 		return uuid if trigger == "on_change" else str(time.time())
 
 NODE_CLASS_MAPPINGS = {

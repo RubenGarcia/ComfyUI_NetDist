@@ -15,10 +15,13 @@ def get_job_output(inputs, outputs):
 			break
 	return outputs[output_id].get("images", [])
 
-def wait_for_job(remote_url, job_id):
+def wait_for_job(remote_url, remote_bearer_token, job_id):
 	fail = 0
+        headers = {}
+        if remote_bearer_token and remote_bearer_token.strip():
+             headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
 	while fail <= 3:
-		r = requests.get(f"{remote_url}/history", timeout=4)
+		r = requests.get(f"{remote_url}/history", headers=headers, timeout=4)
 		try:
 			r.raise_for_status()
 		except Exception as e:
@@ -40,7 +43,7 @@ def wait_for_job(remote_url, job_id):
 		time.sleep(POLLING)
 	raise OSError("Failed to fetch image from remote client!")
 
-def fetch_from_remote(remote_url, job_id):
+def fetch_from_remote(remote_url, remote_bearer_token, job_id):
 	def img_to_torch(img):
 		image = img.convert("RGB")
 		image = np.array(image).astype(np.float32) / 255.0
@@ -51,10 +54,15 @@ def fetch_from_remote(remote_url, job_id):
 		return None
 
 	images = []
+
+        headers = {}
+        if remote_bearer_token and remote_bearer_token.strip():
+            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+
 	for i in wait_for_job(remote_url, job_id):
 		img_url = f"{remote_url}/view?filename={i['filename']}&subfolder={i['subfolder']}&type={i['type']}"
 
-		ir = requests.get(img_url, stream=True, timeout=16)
+		ir = requests.get(img_url, headers=headers, stream=True, timeout=16)
 		ir.raise_for_status()
 		img = Image.open(ir.raw)
 		images.append(img_to_torch(img))

@@ -10,8 +10,11 @@ from copy import deepcopy
 
 from .utils import clean_url, get_client_id
 
-def clear_remote_queue(remote_url):
-	r = requests.get(f"{remote_url}/queue", timeout=4)
+def clear_remote_queue(remote_url, remote_bearer_token):
+        headers = {}
+        if remote_bearer_token and remote_bearer_token.strip():
+            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+	r = requests.get(f"{remote_url}/queue", headers=headers, timeout=4)
 	r.raise_for_status()
 	queue = r.json()
 
@@ -23,6 +26,7 @@ def clear_remote_queue(remote_url):
 	r = requests.post(
 		f"{remote_url}/queue",
 		json    = {"delete" : to_cancel},
+                headers=headers,
 		timeout = 4,
 	)
 	r.raise_for_status()
@@ -32,23 +36,32 @@ def clear_remote_queue(remote_url):
 			r = requests.post(
 				f"{remote_url}/interrupt",
 				json    = {},
+                                headers=headers,
 				timeout = 4,
 			)
 			r.raise_for_status()
 			break
 
-def get_remote_os(remote_url):
+def get_remote_os(remote_url, remote_bearer_token):
+        headers = {}
+        if remote_bearer_token and remote_bearer_token.strip():
+            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+
 	url = f"{remote_url}/system_stats"
-	r = requests.get(url, timeout=4)
+	r = requests.get(url, headers=headers, timeout=4)
 	r.raise_for_status()
 	data = r.json()
 	return data["system"]["os"]
 
-def get_output_nodes(remote_url):
+def get_output_nodes(remote_url, remote_bearer_token):
 	# I'm 90% sure this could just use the
 	# list from the host but better safe than sorry
 	url = f"{remote_url}/object_info"
-	r = requests.get(url, timeout=4)
+        headers = {}
+        if remote_bearer_token and remote_bearer_token.strip():
+            headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
+
+	r = requests.get(url, headers=headers, timeout=4)
 	r.raise_for_status()
 	data = r.json()
 	out = [k for k, v in data.items() if v.get("output_node")]
