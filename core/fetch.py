@@ -59,7 +59,7 @@ def fetch_from_remote(remote_url, remote_bearer_token, job_id):
         if remote_bearer_token and remote_bearer_token.strip():
             headers["Authorization"] = f"Bearer {remote_bearer_token.strip()}"
 
-	for i in wait_for_job(remote_url, job_id):
+	for i in wait_for_job(remote_url, remote_bearer_token, job_id):
 		img_url = f"{remote_url}/view?filename={i['filename']}&subfolder={i['subfolder']}&type={i['type']}"
 
 		ir = requests.get(img_url, headers=headers, stream=True, timeout=16)

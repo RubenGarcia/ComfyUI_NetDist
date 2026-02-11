@@ -102,15 +102,17 @@ class RemoteQueueWorker:
 			return (remote_chain, {})
 
 		remote_url = clean_url(remote_url)
-		clear_remote_queue(remote_url)
+		clear_remote_queue(remote_url, remote_bearer_token)
 		dispatch_to_remote(
 			remote_url,
+                        remote_bearer_token,
 			remote_chain["prompt"],
 			remote_chain["job_id"],
 			outputs,
 		)
 		remote_info = {
 			"remote_url" : remote_url,
+                        "remote_bearer_token": remote_bearer_token,
 			"job_id"     : remote_chain["job_id"],
 		}
 		return (remote_chain, remote_info)
