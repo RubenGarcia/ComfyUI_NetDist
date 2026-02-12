@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 from copy import deepcopy
 
-from .utils import clean_url, get_client_id
+from .utils import clean_url, get_client_id, get_auth_headers
 
 def clear_remote_queue(remote_url, remote_bearer_token):
 	headers = get_auth_headers(remote_bearer_token)
