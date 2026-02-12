@@ -54,6 +54,7 @@ class RemoteQueueSimple():
 					"multiline": False,
 					"default": "",
 					"tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
+				}),
 				"batch_local": ("INT", {"default": 1, "min": 1, "max": 8}),
 				"batch_remote": ("INT", {"default": 1, "min": 1, "max": 8}),
 				"trigger": (["on_change", "always"],),

@@ -77,6 +77,7 @@ class RemoteQueueWorker:
 					"multiline": False,
 					"default": "",
 					"tooltip": "Optional Bearer token for authenticated remote ComfyUI servers (e.g., for ComfyUI-Login)",
+				}),
 				"batch_override": ("INT", {"default": 0, "min": 0, "max": 8}),
 				"enabled": (["true", "false", "remote"],{"default": "true"}),
 				"outputs": (["final_image", "any"],{"default":"final_image"}),
