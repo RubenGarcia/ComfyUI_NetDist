@@ -113,7 +113,7 @@ def dispatch_to_remote(remote_url, remote_bearer_token, prompt, job_id=f"{get_cl
 	for i in to_del: del prompt[i]
 
 	### OS LOGIC ###
-	sep_remote = "\\" if get_remote_os(remote_url) == "nt" else "/"
+	sep_remote = "\\" if get_remote_os(remote_url, remote_bearer_token) == "nt" else "/"
 	sep_local  = "\\" if os.name == "nt" else "/"
 	sem_input_map = { # class type : input to replace
 		"CheckpointLoaderSimple" : "ckpt_name",
